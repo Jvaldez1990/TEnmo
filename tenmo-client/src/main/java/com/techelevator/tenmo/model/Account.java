@@ -6,7 +6,7 @@ public class Account {
 
     private int accountId;
     private int userId;
-    private BigDecimal balance;
+    private static BigDecimal balance;
 
     public Account() {
     }
@@ -17,7 +17,7 @@ public class Account {
         this.balance = balance;
     }
 
-    public BigDecimal getCurrentBalance() {
+    public static BigDecimal getCurrentBalance() {
         return balance;
     }
 
