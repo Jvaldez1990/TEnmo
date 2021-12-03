@@ -70,7 +70,7 @@ private static final String API_BASE_URL = "http://localhost:8080/";
 	}
 
 	private void viewCurrentBalance() {
-		System.out.println(account.getBalance());
+			System.out.println(account.getBalance());
 	}
 
 	private void viewTransferHistory() {
