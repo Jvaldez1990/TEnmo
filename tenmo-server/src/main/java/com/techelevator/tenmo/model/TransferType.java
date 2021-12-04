@@ -1,14 +1,14 @@
 package com.techelevator.tenmo.model;
 
-public class TransferTypes {
+public class TransferType {
 
     private int transfer_type_id;
     private String transfer_type_desc;
 
-    public TransferTypes() {
+    public TransferType() {
     }
 
-    public TransferTypes(int transfer_type_id, String transfer_type_desc) {
+    public TransferType(int transfer_type_id, String transfer_type_desc) {
         this.transfer_type_id = transfer_type_id;
         this.transfer_type_desc = transfer_type_desc;
     }
