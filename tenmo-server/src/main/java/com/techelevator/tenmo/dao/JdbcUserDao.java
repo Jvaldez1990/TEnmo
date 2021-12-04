@@ -34,7 +34,7 @@ public class JdbcUserDao implements UserDao {
     }
 
     @Override
-    public List<User> findAll() {
+    public List<User> listAll() {
         List<User> users = new ArrayList<>();
         String sql = "SELECT user_id, username, password_hash FROM users;";
         SqlRowSet results = jdbcTemplate.queryForRowSet(sql);
@@ -56,7 +56,7 @@ public class JdbcUserDao implements UserDao {
     }
 
     @Override
-    public boolean create(String username, String password) {
+    public boolean createUser(String username, String password) {
 
         // create user
         String sql = "INSERT INTO users (username, password_hash) VALUES (?, ?) RETURNING user_id";
@@ -77,6 +77,19 @@ public class JdbcUserDao implements UserDao {
         }
 
         return true;
+    }
+
+    @Override
+    public User getUserByUserId(int id) {
+        String sql = "SELECT user_id, username FROM users WHERE user_id = ?";
+        SqlRowSet result = jdbcTemplate.queryForRowSet(sql, id);
+        User user = null;
+        if(result.next()) {
+            user = new User();
+            user.setId(result.getLong("user_id"));
+            user.setUsername(result.getString("username"));
+        }
+        return user;
     }
 
     private User mapRowToUser(SqlRowSet rs) {

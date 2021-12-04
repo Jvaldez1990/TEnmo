@@ -6,10 +6,8 @@ import java.util.List;
 
 public interface TransferStatusDao {
 
-    TransferStatus getTransferStatusByTransferStatusId(int transferStatusId);
+    TransferStatus getTransferStatusById(int transferStatusId);
 
-    List<TransferStatus> getAllTransferStatuses();
-
-    void createTransferStatus(TransferStatus transferStatuses);
+    TransferStatus getTransferStatusByDesc(String description);
 
 }

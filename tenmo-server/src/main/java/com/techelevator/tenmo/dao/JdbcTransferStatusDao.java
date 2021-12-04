@@ -19,36 +19,26 @@ public class JdbcTransferStatusDao implements TransferStatusDao {
     }
 
     @Override
-    public TransferStatus getTransferStatusByTransferStatusId(int transfer_status_id) {
+    public TransferStatus getTransferStatusById(int transferStatusId) {
         TransferStatus transferStatus = null;
         String sql = "SELECT * FROM transfer_statuses " +
-                "JOIN transfers ON transfers.transfer_status_id = transfer_statuses.transfer_status_id " +
                 "WHERE transfer_status_id = ?";
-        SqlRowSet results = jdbcTemplate.queryForRowSet(sql, transfer_status_id);
-        if (results.next()) {
-            transferStatus = mapResultsToTransferStatus(results);
+        SqlRowSet result = jdbcTemplate.queryForRowSet(sql, transferStatusId);
+        if (result.next()) {
+            transferStatus = mapResultsToTransferStatus(result);
         }
-
         return transferStatus;
     }
 
     @Override
-    public List<TransferStatus> getAllTransferStatuses() {
-        String sql = "SELECT * FROM transfer_statuses";
-        SqlRowSet results = jdbcTemplate.queryForRowSet(sql);
-        List<TransferStatus> transfers =  new ArrayList<>();
-
-        while (results.next()) {
-            transfers.add(mapResultsToTransferStatus(results));
+    public TransferStatus getTransferStatusByDesc(String description) {
+        String sql = "SELECT * FROM transfer_statuses WHERE transfer_status_desc = ?";
+        SqlRowSet result = jdbcTemplate.queryForRowSet(sql, description);
+        TransferStatus transferStatus = null;
+        if (result.next()) {
+            transferStatus = mapResultsToTransferStatus(result);
         }
-        return transfers;
-    }
-
-    @Override
-    public void createTransferStatus(TransferStatus transferStatus) {
-        String sql = "INSERT INTO transfers (transfer_id, transfer_status_desc) VALUES (?, ?)";
-        jdbcTemplate.update(sql, transferStatus.getTransfer_status_id(), transferStatus.getTransfer_status_desc());
-
+        return transferStatus;
     }
 
 
