@@ -1,16 +1,15 @@
 package com.techelevator.tenmo.services;
 
 import com.techelevator.tenmo.model.Account;
-import org.springframework.web.client.RestTemplate;
+import com.techelevator.tenmo.model.AuthenticatedUser;
 
-public class AccountService {
+import java.math.BigDecimal;
 
-    private RestTemplate restTemplate = new RestTemplate();
-    public static final String API_BASE_URL = "http://localhost:8080";
+public interface AccountService {
 
-    public Account getAccount() {
-        return restTemplate.getForObject(API_BASE_URL, Account.class);
-    }
+    BigDecimal getBalance(AuthenticatedUser authenticatedUser);
 
+    Account getAccountByUserId(AuthenticatedUser authenticatedUser, int userId);
 
+    Account getAccountById(AuthenticatedUser authenticatedUser, int accountId);
 }

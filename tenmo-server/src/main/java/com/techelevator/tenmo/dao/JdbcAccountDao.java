@@ -20,15 +20,15 @@ public class JdbcAccountDao implements AccountDao {
 
     @Override
     public BigDecimal getBalance(String user) {
-        String sql = "SELECT balance FROM accounts JOIN users ON accounts.user_id WHERE username = ?";
+        String sql = "SELECT balance FROM accounts JOIN users ON accounts.user_id = users.user_id WHERE username = ?";
         SqlRowSet results = jdbcTemplate.queryForRowSet(sql, user);
-        Account account = null;
+        BigDecimal balance = null;
 
         if (results.next()) {
             String accountBalance = results.getString("balance");
-            account.setBalance(new BigDecimal(accountBalance));
+            balance = new BigDecimal(accountBalance);
         }
-        return account.getBalance();
+        return balance;
     }
 
     @Override
