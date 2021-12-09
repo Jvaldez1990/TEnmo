@@ -1,11 +1,9 @@
 package com.techelevator.tenmo;
 
 import com.techelevator.tenmo.model.AuthenticatedUser;
+import com.techelevator.tenmo.model.User;
 import com.techelevator.tenmo.model.UserCredentials;
-import com.techelevator.tenmo.services.AccountService;
-import com.techelevator.tenmo.services.AuthenticationService;
-import com.techelevator.tenmo.services.AuthenticationServiceException;
-import com.techelevator.tenmo.services.RestAccountService;
+import com.techelevator.tenmo.services.*;
 import com.techelevator.view.ConsoleService;
 
 import java.math.BigDecimal;
@@ -30,6 +28,7 @@ public class App {
 	private ConsoleService console;
 	private AuthenticationService authenticationService;
 	private AccountService accountService;
+	private UserService userService;
 
 	public static void main(String[] args) {
 		App app = new App(new ConsoleService(System.in, System.out), new AuthenticationService(API_BASE_URL));
@@ -40,6 +39,7 @@ public class App {
 		this.console = console;
 		this.authenticationService = authenticationService;
 		this.accountService = new RestAccountService(API_BASE_URL);
+		this.userService = new RestUserService();
 	}
 
 	public void run() {
@@ -90,7 +90,13 @@ public class App {
 
 	private void sendBucks() {
 		// TODO Auto-generated method stub
+		User[] users = userService.getAllUsers(currentUser);
 
+		System.out.println("Select a user from the list below: \n");
+
+		for (User user : users) {
+			System.out.println(user.getUsername());
+		}
 	}
 
 	private void requestBucks() {
