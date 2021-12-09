@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.security.auth.login.AccountNotFoundException;
 import javax.validation.Valid;
 import java.math.BigDecimal;
+import java.security.Principal;
 
 @RestController
 @PreAuthorize("isAuthenticated()")
@@ -17,8 +18,9 @@ public class AccountController {
     AccountDao accountDao;
 
     @RequestMapping(path = "/balance", method = RequestMethod.GET)
-    public BigDecimal getBalance(String user) {
-        return accountDao.getBalance(user);
+    public BigDecimal getBalance(Principal principal) {
+        System.out.println(principal.getName());
+        return accountDao.getBalance(principal.getName());
     }
 
     @RequestMapping(path="/account/user/{id}", method = RequestMethod.GET)
