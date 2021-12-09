@@ -26,15 +26,12 @@ public class RestUserService implements UserService {
         User[] users = null;
 
         try {
-            users = restTemplate.exchange(API_BASE_URL + "/users", HttpMethod.GET, createHttpEntity(authenticatedUser), User[].class).getBody();
+            users = restTemplate.exchange(API_BASE_URL + "/users", HttpMethod.GET, entity, User[].class).getBody();
         } catch (RestClientResponseException e) {
             System.out.println(e.getRawStatusCode());
         } catch (ResourceAccessException e) {
             System.out.println(e.getMessage());
-        } catch (NullPointerException e) {
-            System.out.println(e.getMessage());
-        }
-        return users;
+        } return users;
     }
 
     @Override
@@ -43,7 +40,7 @@ public class RestUserService implements UserService {
         User user = null;
 
         try {
-            user = restTemplate.exchange(API_BASE_URL + "/users" + id, HttpMethod.GET, createHttpEntity(authenticatedUser), User.class).getBody();
+            user = restTemplate.exchange(API_BASE_URL + "/users" + id, HttpMethod.GET, entity, User.class).getBody();
         } catch (RestClientResponseException e) {
             System.out.println(e.getRawStatusCode());
         } catch (ResourceAccessException e) {
@@ -58,4 +55,5 @@ public class RestUserService implements UserService {
         HttpEntity entity = new HttpEntity(httpHeaders);
         return entity;
     }
+
 }

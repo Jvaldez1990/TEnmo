@@ -29,6 +29,9 @@ public class App {
 	private AuthenticationService authenticationService;
 	private AccountService accountService;
 	private UserService userService;
+	private TransferService transferService;
+	private TransferTypeService transferTypeService;
+	private TransferStatusService transferStatusService;
 
 	public static void main(String[] args) {
 		App app = new App(new ConsoleService(System.in, System.out), new AuthenticationService(API_BASE_URL));
@@ -40,6 +43,9 @@ public class App {
 		this.authenticationService = authenticationService;
 		this.accountService = new RestAccountService(API_BASE_URL);
 		this.userService = new RestUserService();
+		this.transferService = new RestTransferService();
+		this.transferTypeService = new RestTransferTypeService();
+		this.transferStatusService = new RestTransferStatusService();
 	}
 
 	public void run() {
@@ -97,6 +103,9 @@ public class App {
 		for (User user : users) {
 			System.out.println(user.getUsername());
 		}
+
+		int userIdChoice = console.getUserInputInteger("Enter ID of user to send to (enter 0 to cancel)");
+
 	}
 
 	private void requestBucks() {
