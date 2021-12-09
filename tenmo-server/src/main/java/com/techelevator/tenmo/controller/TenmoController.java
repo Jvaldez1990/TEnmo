@@ -122,6 +122,11 @@ public class TenmoController {
         return transferStatusDao.getTransferStatusById(transferStatusId);
     }
 
+    @RequestMapping(path = "/transferStatus/{transferStatusByDesc}", method = RequestMethod.GET)
+    public TransferStatus getTransferStatusByDescription(String description) {
+        return transferStatusDao.getTransferStatusByDescription(description);
+    }
+
     /*====================================================================
                         * Transfer Type Method *
      ====================================================================*/
@@ -129,5 +134,10 @@ public class TenmoController {
     @RequestMapping(path = "/transferType/{transferTypeId}", method = RequestMethod.GET)
     public TransferType getTransferTypeByTransferTypeId(int transferTypeId) {
         return transferTypeDao.getTransferTypeByTransferTypeId(transferTypeId);
+    }
+
+    @RequestMapping(path = "/transferType/{transferTypeByDesc}", method = RequestMethod.GET)
+    public TransferType getTransferTypeFromDescription(String description) {
+        return transferTypeDao.getTransferTypeFromDescription(description);
     }
 }
