@@ -30,7 +30,7 @@ public class JdbcUserDao implements UserDao {
             return id;
         } else {
             return -1;
-    }
+        }
     }
 
     @Override
@@ -51,7 +51,7 @@ public class JdbcUserDao implements UserDao {
         SqlRowSet rowSet = jdbcTemplate.queryForRowSet(sql, username);
         if (rowSet.next()){
             return mapRowToUser(rowSet);
-            }
+        }
         throw new UsernameNotFoundException("User " + username + " was not found.");
     }
 
@@ -66,7 +66,7 @@ public class JdbcUserDao implements UserDao {
             newUserId = jdbcTemplate.queryForObject(sql, Integer.class, username, password_hash);
         } catch (DataAccessException e) {
             return false;
-                }
+        }
 
         // create account
         sql = "INSERT INTO accounts (user_id, balance) values(?, ?)";

@@ -7,5 +7,6 @@ import java.util.List;
 public interface TransferTypeDao {
     TransferType getTransferTypeByTransferTypeId(int transferTypeId);
 
+    TransferType getTransferTypeFromDescription(String desc);
 
 }
