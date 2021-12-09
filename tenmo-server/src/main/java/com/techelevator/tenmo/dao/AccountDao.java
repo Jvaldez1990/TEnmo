@@ -8,6 +8,6 @@ public interface AccountDao {
     BigDecimal getBalance(String user);
     Account getAccountByUserId(int userId);
     Account getAccountByAccountId(int accountId);
+    void updateAccount(Account accountToUpdate, int accountId);
 
-    void updateAccount(Account accountToUpdate);
 }
