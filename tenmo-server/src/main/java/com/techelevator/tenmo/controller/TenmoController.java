@@ -32,7 +32,7 @@ public class TenmoController {
     @RequestMapping(path = "/balance", method = RequestMethod.GET)
     public BigDecimal getBalance(Principal principal) {
         System.out.println(principal.getName());
-        return accountDao.getBalance(principal.getName());
+        return accountDao.getBalance(userDao.findByUsername(principal.getName()).getId());
     }
 
     @RequestMapping(path = "/users", method = RequestMethod.GET)
