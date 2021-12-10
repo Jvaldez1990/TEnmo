@@ -71,4 +71,19 @@ public class Transfer {
     public void setAmount(BigDecimal amount) {
         this.amount = amount;
     }
+
+    public void displayTransfers(Transfer[] transfers, User accountFrom, User accountTo) {
+
+        System.out.println("-----------------------------------");
+        System.out.println("Transfers");
+        System.out.println("ID          From/To          Amount");
+        System.out.println("-----------------------------------");
+
+        for(Transfer transfer : transfers) {
+            System.out.println(transferId + "From: " + accountFrom.getUsername() +  "        $ " + transfer.getAmount());
+            System.out.println(transferId + "To: " + accountTo.getUsername() +  "        $ " + transfer.getAmount());
+        }
+
+        System.out.println("---------");
+    }
 }

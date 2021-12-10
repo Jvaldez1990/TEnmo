@@ -2,10 +2,7 @@ package com.techelevator.tenmo;
 
 import com.techelevator.tenmo.exceptions.InvalidChoiceException;
 import com.techelevator.tenmo.exceptions.UserNotFoundException;
-import com.techelevator.tenmo.model.AuthenticatedUser;
-import com.techelevator.tenmo.model.Transfer;
-import com.techelevator.tenmo.model.User;
-import com.techelevator.tenmo.model.UserCredentials;
+import com.techelevator.tenmo.model.*;
 import com.techelevator.tenmo.services.*;
 import com.techelevator.view.ConsoleService;
 
@@ -90,8 +87,8 @@ public class App {
 	}
 
 	private void viewTransferHistory() {
-		Transfer[] transfers = transferService.getTransfersByUserId(currentUser, currentUser.getUser().getId());
-
+		Transfer[] transfers = transferService.getAllTransfers(currentUser);
+		printAllTransfers(currentUser);
 	}
 
 	private void viewPendingRequests() {
@@ -185,6 +182,27 @@ public class App {
 
 		// TODO: update this to not display current user
 		console.printUsers(users);
+	}
+
+	private void printAllTransfers(AuthenticatedUser authenticatedUser) {
+		System.out.println("-----------------------------------");
+		System.out.println("Transfers");
+		System.out.println("ID         From/To          Amount");
+		System.out.println("-----------------------------------");
+
+		Transfer[] transfers = transferService.getTransfersByUserId(currentUser, currentUser.getUser().getId());
+
+		if(transfers.length > 0) {
+			for (Transfer transfer : transfers) {
+				int accountTo = accountService.getAccountByUserId(currentUser, transfer.getAccountTo()).getAccountId();
+				User userTransferredTo = userService.getUserByUserId(currentUser, accountService.getAccountById(currentUser, accountTo).getUserId());
+
+				System.out.println(transfer.getTransferId() + "          From: " + currentUser.getUser().getUsername() + "        $ " + transfer.getAmount());
+				System.out.println(transfer.getTransferId() + "          To: " + userTransferredTo.getUsername() + "       $ " + transfer.getAmount());
+				System.out.println("---------");
+			}
+		}
+
 	}
 
 	private boolean validateUserChoice(int userIdChoice, User[] users, AuthenticatedUser currentUser) {
