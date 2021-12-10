@@ -1,10 +1,12 @@
 package com.techelevator.tenmo;
 
 import com.techelevator.tenmo.exceptions.InvalidChoiceException;
+import com.techelevator.tenmo.exceptions.TransferNotFoundException;
 import com.techelevator.tenmo.exceptions.UserNotFoundException;
 import com.techelevator.tenmo.model.*;
 import com.techelevator.tenmo.services.*;
 import com.techelevator.view.ConsoleService;
+import io.cucumber.java.bs.A;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
@@ -89,8 +91,14 @@ public class App {
 	}
 
 	private void viewTransferHistory() {
-//		Transfer[] transfers = transferService.getTransfersByUserId(currentUser, currentUser.getUser().getId());
-		printAllTransfers(currentUser);
+		Transfer[] transfers = transferService.getTransfersByUserId(currentUser, currentUser.getUser().getId());
+		printAllTransfers(currentUser, transfers);
+
+		int transferIdSelection = console.getUserInputInteger("Please enter transfer ID to view details (0 to cancel): ");
+		if (validateTransferChoice(transferIdSelection, transfers)) {
+			printTransferDetails(currentUser, transferIdSelection);
+		}
+
 	}
 
 	private void viewPendingRequests() {
@@ -185,8 +193,8 @@ public class App {
 		console.printUsers(users);
 	}
 
-	private void printAllTransfers(AuthenticatedUser authenticatedUser) {
-		Transfer[] transfers = transferService.getTransfersByUserId(currentUser, currentUser.getUser().getId());
+	private void printAllTransfers(AuthenticatedUser authenticatedUser, Transfer[] transfers) {
+//		Transfer[] transfers = transferService.getTransfersByUserId(currentUser, currentUser.getUser().getId());
 		List<String> results = new ArrayList<>();
 			for (Transfer transfer : transfers) {
 				results.add(transfer.getTransferId() + "     " +  toOrFromLogic(currentUser, transfer)   + "     $ " + transfer.getAmount());
@@ -277,5 +285,53 @@ public class App {
 
 	public static void incrementTransferIdNumber() {
 		transferIdNumber++;
+	}
+
+	private boolean validateTransferChoice(int transferIdChoice, Transfer[] transfers) {
+		if(transferIdChoice != 0) {
+			try {
+				boolean validateTransferChoice = false;
+
+				for (Transfer transfer : transfers) {
+					if (transfer.getTransferId() == transferIdChoice) {
+						validateTransferChoice = true;
+						break;
+					}
+				}
+				if (validateTransferChoice == false) {
+					throw new TransferNotFoundException();
+				}
+				return true;
+			} catch (TransferNotFoundException e) {
+				System.out.println(e.getMessage());
+			}
+		}
+		return false;
+	}
+
+	private void printTransferDetails(AuthenticatedUser authenticatedUser, int transferIdNumber) {
+		Transfer transfer = transferService.getTransferByTransferId(currentUser, transferIdNumber);
+		TransferType transferType = transferTypeService.getTransferTypeByTransferTypeId(currentUser, transfer.getTransferTypeId());
+		TransferStatus transferStatus = transferStatusService.getTransferStatusById(currentUser, transfer.getTransferStatusId());
+
+		Account accountFrom = new Account();
+		accountFrom = accountService.getAccountById(currentUser, transfer.getAccountFrom());
+		User userFrom = new User();
+		userFrom = userService.getUserByUserId(currentUser, accountFrom.getUserId());
+
+		Account accountTo = new Account();
+		accountTo = accountService.getAccountById(currentUser, transfer.getAccountTo());
+		User userTo = new User();
+		userTo = userService.getUserByUserId(currentUser, accountTo.getUserId());
+
+		System.out.println("--------------------------------------------");
+		System.out.println("Transfer Details");
+		System.out.println("--------------------------------------------");
+		System.out.println("Id:     " + transfer.getTransferId());
+		System.out.println("From:   " + userFrom.getUsername());
+		System.out.println("To:     " + userTo.getUsername());
+		System.out.println("Type:   " + transferType.getTransferTypeDesc());
+		System.out.println("Status: " + transferStatus.getTransferStatusDesc());
+		System.out.println("Amount: " + transfer.getAmount());
 	}
 }
