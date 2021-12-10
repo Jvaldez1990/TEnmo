@@ -7,6 +7,8 @@ import com.techelevator.tenmo.services.*;
 import com.techelevator.view.ConsoleService;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.List;
 
 public class App {
 
@@ -87,7 +89,7 @@ public class App {
 	}
 
 	private void viewTransferHistory() {
-		Transfer[] transfers = transferService.getAllTransfers(currentUser);
+//		Transfer[] transfers = transferService.getTransfersByUserId(currentUser, currentUser.getUser().getId());
 		printAllTransfers(currentUser);
 	}
 
@@ -180,29 +182,42 @@ public class App {
 		System.out.println("ID          Name");
 		System.out.println("-------------------------------");
 
-		// TODO: update this to not display current user
 		console.printUsers(users);
 	}
 
 	private void printAllTransfers(AuthenticatedUser authenticatedUser) {
+		Transfer[] transfers = transferService.getTransfersByUserId(currentUser, currentUser.getUser().getId());
+		List<String> results = new ArrayList<>();
+			for (Transfer transfer : transfers) {
+				results.add(transfer.getTransferId() + "     " +  toOrFromLogic(currentUser, transfer)   + "     $ " + transfer.getAmount());
+			}
 		System.out.println("-----------------------------------");
 		System.out.println("Transfers");
 		System.out.println("ID         From/To          Amount");
 		System.out.println("-----------------------------------");
 
-		Transfer[] transfers = transferService.getTransfersByUserId(currentUser, currentUser.getUser().getId());
-
-		if(transfers.length > 0) {
-			for (Transfer transfer : transfers) {
-				int accountTo = accountService.getAccountByUserId(currentUser, transfer.getAccountTo()).getAccountId();
-				User userTransferredTo = userService.getUserByUserId(currentUser, accountService.getAccountById(currentUser, accountTo).getUserId());
-
-				System.out.println(transfer.getTransferId() + "          From: " + currentUser.getUser().getUsername() + "        $ " + transfer.getAmount());
-				System.out.println(transfer.getTransferId() + "          To: " + userTransferredTo.getUsername() + "       $ " + transfer.getAmount());
-				System.out.println("---------");
-			}
+		for (String line : results) {
+			System.out.println(line);
 		}
 
+		System.out.println("---------");
+	}
+
+	private String toOrFromLogic(AuthenticatedUser authenticatedUser, Transfer transfer) {
+		String toOrFrom;
+		int accountTo = transfer.getAccountTo();
+		int accountFrom = transfer.getAccountFrom();
+
+		if (accountService.getAccountById(currentUser, accountTo).getUserId() == authenticatedUser.getUser().getId()) {
+			int accountFromUserId = accountService.getAccountById(authenticatedUser,accountFrom).getUserId();
+			String usernameFrom = userService.getUserByUserId(authenticatedUser, accountFromUserId).getUsername();
+			toOrFrom = "From: " + usernameFrom;
+		} else {
+			int accountToUserId = accountService.getAccountById(authenticatedUser, accountTo).getUserId();
+			String usernameTo = userService.getUserByUserId(currentUser, accountToUserId).getUsername();
+			toOrFrom = "To:   " + usernameTo;
+		}
+		return toOrFrom;
 	}
 
 	private boolean validateUserChoice(int userIdChoice, User[] users, AuthenticatedUser currentUser) {
@@ -255,7 +270,7 @@ public class App {
 		transfer.setTransferId(transferIdNumber);
 
 		transferService.createTransfer(currentUser, transfer);
-		// increment transferIdNumber so it is always unique
+
 		App.incrementTransferIdNumber();
 		return transfer;
 	}

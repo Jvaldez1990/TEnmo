@@ -21,10 +21,10 @@ public class UserController {
         return userDao.listAll();
     }
 
-    @RequestMapping(path = "/users/{username}", method = RequestMethod.GET)
-    public User findByUsername (@PathVariable String username) {
-        return userDao.findByUsername(username);
-    }
+//    @RequestMapping(path = "/users/{username}", method = RequestMethod.GET)
+//    public User findByUsername (@RequestParam(value="username") String username) {
+//        return userDao.findByUsername(username);
+//    }
 
     @RequestMapping(path="/users/{id}", method = RequestMethod.GET)
     public User getUserByUserId(@PathVariable int id) {
