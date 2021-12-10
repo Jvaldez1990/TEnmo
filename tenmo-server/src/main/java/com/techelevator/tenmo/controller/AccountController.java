@@ -34,7 +34,7 @@ public class AccountController {
     }
 
     @RequestMapping(path = "/account/{id}", method = RequestMethod.PUT)
-    public void updateAccount(@Valid @RequestBody Account account) throws AccountNotFoundException {
+    public void updateAccount(@Valid @RequestBody Account account) {
         accountDao.updateAccount(account);
     }
 }

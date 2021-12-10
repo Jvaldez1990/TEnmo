@@ -90,7 +90,7 @@ public class App {
 	}
 
 	private void viewTransferHistory() {
-		// TODO Auto-generated method stub
+		Transfer[] transfers = transferService.getTransfersByUserId(currentUser, currentUser.getUser().getId());
 
 	}
 
