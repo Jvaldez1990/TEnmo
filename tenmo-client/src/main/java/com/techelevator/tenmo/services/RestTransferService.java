@@ -14,11 +14,11 @@ import java.util.List;
 
 public class RestTransferService implements TransferService {
 
-    private final String API_BASE_URL = "http://localhost:8080";
-    private RestTemplate restTemplate;
+    private final String API_BASE_URL;
+    private RestTemplate restTemplate = new RestTemplate();
 
-    public RestTransferService() {
-        this.restTemplate = new RestTemplate();
+    public RestTransferService(String API_BASE_URL) {
+        this.API_BASE_URL = API_BASE_URL;
     }
 
     @Override

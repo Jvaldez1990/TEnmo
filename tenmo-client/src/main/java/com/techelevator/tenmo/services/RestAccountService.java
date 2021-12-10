@@ -13,12 +13,11 @@ import org.springframework.web.client.RestTemplate;
 import java.math.BigDecimal;
 
 public class RestAccountService implements AccountService {
-    private final String baseUrl;
-    private RestTemplate restTemplate;
+    private final String API_BASE_URL;
+    private RestTemplate restTemplate = new RestTemplate();
 
-    public RestAccountService(String baseUrl) {
-        this.restTemplate = new RestTemplate();
-        this.baseUrl = baseUrl;
+    public RestAccountService(String API_BASE_URL) {
+        this.API_BASE_URL = API_BASE_URL;
     }
 
 
@@ -28,7 +27,7 @@ public class RestAccountService implements AccountService {
         BigDecimal balance = new BigDecimal(1);
 
         try {
-            balance = restTemplate.exchange(baseUrl + "/balance", HttpMethod.GET, entity, BigDecimal.class).getBody();
+            balance = restTemplate.exchange(API_BASE_URL + "/balance", HttpMethod.GET, entity, BigDecimal.class).getBody();
         } catch (RestClientResponseException e) {
             System.out.println(e.getRawStatusCode());
         } catch (ResourceAccessException e) {
@@ -41,7 +40,7 @@ public class RestAccountService implements AccountService {
     public Account getAccountByUserId(AuthenticatedUser authenticatedUser, int userId) {
         Account account = null;
         try {
-            account = restTemplate.exchange(baseUrl + "account/user/" + userId, HttpMethod.GET, createHttpEntity(authenticatedUser), Account.class).getBody();
+            account = restTemplate.exchange(API_BASE_URL + "account/user/" + userId, HttpMethod.GET, createHttpEntity(authenticatedUser), Account.class).getBody();
         } catch (RestClientResponseException e) {
             System.out.println(e.getRawStatusCode());
         } catch (ResourceAccessException e) {
@@ -54,7 +53,7 @@ public class RestAccountService implements AccountService {
     public Account getAccountById(AuthenticatedUser authenticatedUser, int accountId) {
         Account account = null;
         try {
-            account = restTemplate.exchange(baseUrl + "account/" + accountId, HttpMethod.GET, createHttpEntity(authenticatedUser), Account.class).getBody();
+            account = restTemplate.exchange(API_BASE_URL + "account/" + accountId, HttpMethod.GET, createHttpEntity(authenticatedUser), Account.class).getBody();
         } catch (RestClientResponseException e) {
             System.out.println(e.getRawStatusCode());
         } catch (ResourceAccessException e) {

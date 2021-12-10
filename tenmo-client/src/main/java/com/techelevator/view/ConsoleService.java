@@ -1,6 +1,8 @@
 package com.techelevator.view;
 
 
+import com.techelevator.tenmo.model.User;
+
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.PrintWriter;
@@ -72,5 +74,13 @@ public class ConsoleService {
 			}
 		} while(result == null);
 		return result;
+	}
+
+	public void printUsers(User[] users) {
+		for(User user: users) {
+			out.println(user.getId() + "          " + user.getUsername());
+		}
+		out.println("-------------------------------");
+		out.flush();
 	}
 }

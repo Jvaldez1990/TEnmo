@@ -11,11 +11,11 @@ import org.springframework.web.client.RestClientResponseException;
 import org.springframework.web.client.RestTemplate;
 
 public class RestTransferStatusService implements TransferStatusService {
-    private final String API_BASE_URL = "http://localhost:8080";
+    private final String API_BASE_URL;
     private RestTemplate restTemplate = new RestTemplate();
 
-    public RestTransferStatusService() {
-
+    public RestTransferStatusService(String API_BASE_URL) {
+        this.API_BASE_URL = API_BASE_URL;
     }
 
     @Override

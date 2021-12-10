@@ -42,10 +42,10 @@ public class App {
 		this.console = console;
 		this.authenticationService = authenticationService;
 		this.accountService = new RestAccountService(API_BASE_URL);
-		this.userService = new RestUserService();
-		this.transferService = new RestTransferService();
-		this.transferTypeService = new RestTransferTypeService();
-		this.transferStatusService = new RestTransferStatusService();
+		this.userService = new RestUserService(API_BASE_URL);
+		this.transferService = new RestTransferService(API_BASE_URL);
+		this.transferTypeService = new RestTransferTypeService(API_BASE_URL);
+		this.transferStatusService = new RestTransferStatusService(API_BASE_URL);
 	}
 
 	public void run() {
@@ -97,14 +97,9 @@ public class App {
 	private void sendBucks() {
 		// TODO Auto-generated method stub
 		User[] users = userService.getAllUsers(currentUser);
+		printUsersInfo(currentUser, users);
 
-		System.out.println("Select a user from the list below: \n");
-
-		for (User user : users) {
-			System.out.println(user.getUsername());
-		}
-
-		int userIdChoice = console.getUserInputInteger("Enter ID of user to send to (enter 0 to cancel)");
+		int userIdSelection = console.getUserInputInteger("Enter ID of user to send to (enter 0 to cancel)");
 
 	}
 
@@ -171,5 +166,16 @@ public class App {
 		String username = console.getUserInput("Username");
 		String password = console.getUserInput("Password");
 		return new UserCredentials(username, password);
+	}
+
+	private void printUsersInfo(AuthenticatedUser authenticatedUser, User[] users) {
+
+		System.out.println("-------------------------------");
+		System.out.println("Users");
+		System.out.println("ID          Name");
+		System.out.println("-------------------------------");
+
+		// TODO: update this to not display current user
+		console.printUsers(users);
 	}
 }

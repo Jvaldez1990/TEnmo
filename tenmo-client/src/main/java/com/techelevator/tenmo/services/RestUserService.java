@@ -2,6 +2,7 @@ package com.techelevator.tenmo.services;
 
 import com.techelevator.tenmo.model.AuthenticatedUser;
 import com.techelevator.tenmo.model.User;
+import org.apiguardian.api.API;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
@@ -12,12 +13,11 @@ import org.springframework.web.client.RestTemplate;
 import java.math.BigDecimal;
 
 public class RestUserService implements UserService {
+    private final String API_BASE_URL;
+    private RestTemplate restTemplate = new RestTemplate();
 
-    private final String API_BASE_URL = "http://localhost:8080";
-    private RestTemplate restTemplate;
-
-    public RestUserService() {
-        this.restTemplate = new RestTemplate();
+    public RestUserService(String API_BASE_URL) {
+        this.API_BASE_URL = API_BASE_URL;
     }
 
     @Override
