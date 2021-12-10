@@ -17,13 +17,13 @@ public class TransferStatusController {
     @Autowired
     TransferStatusDao transferStatusDao;
 
-    @RequestMapping(path = "/transferStatus/{transferStatusId}", method = RequestMethod.GET)
+    @RequestMapping(path = "/transferstatus/{transferStatusId}", method = RequestMethod.GET)
     public TransferStatus getTransferStatusById(@PathVariable int transferStatusId) {
         return transferStatusDao.getTransferStatusById(transferStatusId);
     }
 
-    @RequestMapping(path = "/transferStatus/{transferStatusByDesc}", method = RequestMethod.GET)
-    public TransferStatus getTransferStatusByDescription(@PathVariable String description) {
+    @RequestMapping(path = "/transferstatus/filter", method = RequestMethod.GET)
+    public TransferStatus getTransferStatusByDescription(@RequestParam String description) {
         return transferStatusDao.getTransferStatusByDesc(description);
     }
 }

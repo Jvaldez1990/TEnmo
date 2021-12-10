@@ -1,6 +1,9 @@
 package com.techelevator.tenmo;
 
+import com.techelevator.tenmo.exceptions.InvalidChoiceException;
+import com.techelevator.tenmo.exceptions.UserNotFoundException;
 import com.techelevator.tenmo.model.AuthenticatedUser;
+import com.techelevator.tenmo.model.Transfer;
 import com.techelevator.tenmo.model.User;
 import com.techelevator.tenmo.model.UserCredentials;
 import com.techelevator.tenmo.services.*;
@@ -32,6 +35,8 @@ public class App {
 	private TransferService transferService;
 	private TransferTypeService transferTypeService;
 	private TransferStatusService transferStatusService;
+
+	private static int transferIdNumber;
 
 	public static void main(String[] args) {
 		App app = new App(new ConsoleService(System.in, System.out), new AuthenticationService(API_BASE_URL));
@@ -100,7 +105,10 @@ public class App {
 		printUsersInfo(currentUser, users);
 
 		int userIdSelection = console.getUserInputInteger("Enter ID of user to send to (enter 0 to cancel)");
-
+		if (validateUserChoice(userIdSelection, users, currentUser)) {
+			String amount = console.getUserInput("Enter amount to send: ");
+			createTransfer(userIdSelection, amount, "Send", "Approved");
+		}
 	}
 
 	private void requestBucks() {
@@ -177,5 +185,64 @@ public class App {
 
 		// TODO: update this to not display current user
 		console.printUsers(users);
+	}
+
+	private boolean validateUserChoice(int userIdChoice, User[] users, AuthenticatedUser currentUser) {
+		if(userIdChoice != 0) {
+			try {
+				boolean validUserIdChoice = false;
+
+				for (User user : users) {
+					if(userIdChoice == currentUser.getUser().getId()) {
+						throw new InvalidChoiceException();
+					}
+					if (user.getId() == userIdChoice) {
+						validUserIdChoice = true;
+						break;
+					}
+				}
+				if (validUserIdChoice == false) {
+					throw new UserNotFoundException();
+				}
+				return true;
+			} catch (UserNotFoundException | InvalidChoiceException e) {
+				System.out.println(e.getMessage());
+			}
+		}
+		return false;
+	}
+
+	private Transfer createTransfer (int accountChoiceUserId, String amountString, String transferType, String status){
+
+		int transferTypeId = transferTypeService.getTransferTypeFromDescription(currentUser, transferType).getTransferTypeId();
+		int transferStatusId = transferStatusService.getTransferStatusByDesc(currentUser, status).getTransferStatusId();
+		int accountToId;
+		int accountFromId;
+		if(transferType.equals("Send")) {
+			accountToId = accountService.getAccountByUserId(currentUser, accountChoiceUserId).getAccountId();
+			accountFromId = accountService.getAccountByUserId(currentUser, currentUser.getUser().getId()).getAccountId();
+		} else {
+			accountToId = accountService.getAccountByUserId(currentUser, currentUser.getUser().getId()).getAccountId();
+			accountFromId = accountService.getAccountByUserId(currentUser, accountChoiceUserId).getAccountId();
+		}
+
+		BigDecimal amount = new BigDecimal(amountString);
+
+		Transfer transfer = new Transfer();
+		transfer.setAccountFrom(accountFromId);
+		transfer.setAccountTo(accountToId);
+		transfer.setAmount(amount);
+		transfer.setTransferStatusId(transferStatusId);
+		transfer.setTransferTypeId(transferTypeId);
+		transfer.setTransferId(transferIdNumber);
+
+		transferService.createTransfer(currentUser, transfer);
+		// increment transferIdNumber so it is always unique
+		App.incrementTransferIdNumber();
+		return transfer;
+	}
+
+	public static void incrementTransferIdNumber() {
+		transferIdNumber++;
 	}
 }

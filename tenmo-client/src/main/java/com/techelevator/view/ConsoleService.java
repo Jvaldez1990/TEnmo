@@ -80,7 +80,7 @@ public class ConsoleService {
 		for(User user: users) {
 			out.println(user.getId() + "          " + user.getUsername());
 		}
-		out.println("-------------------------------");
+		out.println("---------");
 		out.flush();
 	}
 }

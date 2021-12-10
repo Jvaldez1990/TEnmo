@@ -17,13 +17,13 @@ public class TransferTypeController {
     @Autowired
     TransferTypeDao transferTypeDao;
 
-    @RequestMapping(path = "/transferType/{transferTypeId}", method = RequestMethod.GET)
+    @RequestMapping(path = "/transfertype/{transferTypeId}", method = RequestMethod.GET)
     public TransferType getTransferTypeByTransferTypeId(@PathVariable int transferTypeId) {
         return transferTypeDao.getTransferTypeByTransferTypeId(transferTypeId);
     }
 
-    @RequestMapping(path = "/transferType/{transferTypeByDesc}", method = RequestMethod.GET)
-    public TransferType getTransferTypeFromDescription(@PathVariable String description) {
+    @RequestMapping(path = "/transfertype/filter", method = RequestMethod.GET)
+    public TransferType getTransferTypeFromDescription(@RequestParam String description) {
         return transferTypeDao.getTransferTypeFromDescription(description);
     }
 }

@@ -35,7 +35,7 @@ public class RestTransferStatusService implements TransferStatusService {
     @Override
     public TransferStatus getTransferStatusByDesc(AuthenticatedUser authenticatedUser, String description) {
         TransferStatus transferStatus = null;
-        String url = API_BASE_URL + "/transferstatus/" + description;
+        String url = API_BASE_URL + "/transferstatus/filter?description=" + description;
         try {
             transferStatus = restTemplate.exchange(url, HttpMethod.GET, makeEntity(authenticatedUser), TransferStatus.class).getBody();
         } catch (RestClientResponseException e) {
