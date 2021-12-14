@@ -38,7 +38,6 @@ public class RestTransferService implements TransferService {
     @Override
     public Transfer getTransferByTransferId(AuthenticatedUser authenticatedUser, int transferId) {
         Transfer transfer = null;
-
         try {
             transfer = restTemplate.exchange(API_BASE_URL + "/transfers/" + transferId, HttpMethod.GET,
                     createHttpEntity(authenticatedUser), Transfer.class).getBody();
@@ -53,7 +52,6 @@ public class RestTransferService implements TransferService {
     @Override
     public Transfer[] getAllTransfers(AuthenticatedUser authenticatedUser) {
         Transfer[] transfers = null;
-
         try {
             transfers = restTemplate.exchange(API_BASE_URL + "/transfers", HttpMethod.GET, createHttpEntity(authenticatedUser), Transfer[].class).getBody();
         } catch (RestClientResponseException e) {

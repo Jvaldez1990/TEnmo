@@ -22,11 +22,9 @@ public class JdbcTransferDao implements TransferDao {
                 "WHERE user_id = ?";
         SqlRowSet results = jdbcTemplate.queryForRowSet(sql, userId);
         List<Transfer> transfers = new ArrayList<>();
-
         while (results.next()) {
             transfers.add(mapResultsToTransfer(results));
         }
-
         return transfers;
     }
 
@@ -36,11 +34,9 @@ public class JdbcTransferDao implements TransferDao {
                 "WHERE transfer_id = ?";
         SqlRowSet result = jdbcTemplate.queryForRowSet(sql, transferId);
         Transfer transfer = null;
-
         if (result.next()) {
             transfer = mapResultsToTransfer(result);
         }
-
         return transfer;
     }
 
@@ -49,7 +45,6 @@ public class JdbcTransferDao implements TransferDao {
         String sql = "SELECT * FROM transfers";
         SqlRowSet results = jdbcTemplate.queryForRowSet(sql);
         List<Transfer> transfers =  new ArrayList<>();
-
         while (results.next()) {
             transfers.add(mapResultsToTransfer(results));
         }
@@ -63,8 +58,10 @@ public class JdbcTransferDao implements TransferDao {
 
     @Override
     public void createTransfer(Transfer transfer) {
-        String sql = "INSERT INTO transfers (transfer_id, transfer_type_id, transfer_status_id, account_from, account_to, amount) VALUES (?, ?, ?, ?, ?, ?)";
-        jdbcTemplate.update(sql, transfer.getTransferId(), transfer.getTransferTypeId(), transfer.getTransferStatusId(), transfer.getAccountFrom(), transfer.getAccountTo(), transfer.getAmount());
+        String sql = "INSERT INTO transfers (transfer_id, transfer_type_id," +
+                " transfer_status_id, account_from, account_to, amount) VALUES (DEFAULT, ?, ?, ?, ?, ?)";
+        jdbcTemplate.update(sql, transfer.getTransferTypeId(),
+                transfer.getTransferStatusId(), transfer.getAccountFrom(), transfer.getAccountTo(), transfer.getAmount());
 
     }
 

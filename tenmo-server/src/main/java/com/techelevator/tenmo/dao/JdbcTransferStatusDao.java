@@ -5,10 +5,6 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.rowset.SqlRowSet;
 import org.springframework.stereotype.Component;
 
-import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.List;
-
 @Component
 public class JdbcTransferStatusDao implements TransferStatusDao {
 
@@ -46,7 +42,6 @@ public class JdbcTransferStatusDao implements TransferStatusDao {
         int transfer_status_id = result.getInt("transfer_status_id");
         String transfer_status_desc = result.getString("transfer_status_desc");
 
-        TransferStatus transferStatus = new TransferStatus(transfer_status_id, transfer_status_desc);
-        return transferStatus;
+        return new TransferStatus(transfer_status_id, transfer_status_desc);
     }
 }

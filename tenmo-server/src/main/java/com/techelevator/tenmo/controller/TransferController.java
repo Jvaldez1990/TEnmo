@@ -3,8 +3,10 @@ package com.techelevator.tenmo.controller;
 import com.techelevator.tenmo.InsufficientFundsException;
 import com.techelevator.tenmo.dao.AccountDao;
 import com.techelevator.tenmo.dao.TransferDao;
+import com.techelevator.tenmo.dao.TransferStatusDao;
 import com.techelevator.tenmo.model.Account;
 import com.techelevator.tenmo.model.Transfer;
+import com.techelevator.tenmo.model.TransferStatus;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -22,6 +24,8 @@ public class TransferController {
     TransferDao transferDao;
     @Autowired
     AccountDao accountDao;
+    @Autowired
+    TransferStatusDao transferStatusDao;
 
     @RequestMapping(path = "/transfers", method = RequestMethod.GET)
     public List<Transfer> getAllTransfers() {
@@ -46,13 +50,17 @@ public class TransferController {
         Account fromAccount = accountDao.getAccountByAccountId(transfer.getAccountFrom());
         Account toAccount = accountDao.getAccountByAccountId(transfer.getAccountTo());
 
-        fromAccount.sendMoney(transferAmount);
-        toAccount.receiveMoney(transferAmount);
-
+        TransferStatus status = transferStatusDao.getTransferStatusById(transfer.getTransferStatusId());
         transferDao.createTransfer(transfer);
 
-        accountDao.updateAccount(fromAccount);
-        accountDao.updateAccount(toAccount);
+//        if (status.getTransferStatusDesc().equalsIgnoreCase("Send")) {
+
+            fromAccount.sendMoney(transferAmount);
+            toAccount.receiveMoney(transferAmount);
+
+            accountDao.updateAccount(fromAccount);
+            accountDao.updateAccount(toAccount);
+//        }
     }
 
     @RequestMapping(path = "/transfer", method = RequestMethod.PUT)

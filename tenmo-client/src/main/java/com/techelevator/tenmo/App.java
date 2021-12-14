@@ -37,7 +37,7 @@ public class App {
 	private TransferTypeService transferTypeService;
 	private TransferStatusService transferStatusService;
 
-	private static int transferIdNumber;
+//	private static int transferIdNumber;
 
 	public static void main(String[] args) {
 		App app = new App(new ConsoleService(System.in, System.out), new AuthenticationService(API_BASE_URL));
@@ -194,11 +194,12 @@ public class App {
 	}
 
 	private void printAllTransfers(AuthenticatedUser authenticatedUser, Transfer[] transfers) {
-//		Transfer[] transfers = transferService.getTransfersByUserId(currentUser, currentUser.getUser().getId());
 		List<String> results = new ArrayList<>();
-			for (Transfer transfer : transfers) {
-				results.add(transfer.getTransferId() + "     " +  toOrFromLogic(currentUser, transfer)   + "     $ " + transfer.getAmount());
-			}
+
+		for (Transfer transfer : transfers) {
+			results.add(transfer.getTransferId() + "     " +  toOrFromLogic(currentUser, transfer)   + "     $ " + transfer.getAmount());
+		}
+
 		System.out.println("-----------------------------------");
 		System.out.println("Transfers");
 		System.out.println("ID         From/To          Amount");
@@ -259,6 +260,8 @@ public class App {
 		int transferStatusId = transferStatusService.getTransferStatusByDesc(currentUser, status).getTransferStatusId();
 		int accountToId;
 		int accountFromId;
+
+
 		if(transferType.equals("Send")) {
 			accountToId = accountService.getAccountByUserId(currentUser, accountChoiceUserId).getAccountId();
 			accountFromId = accountService.getAccountByUserId(currentUser, currentUser.getUser().getId()).getAccountId();
@@ -275,17 +278,12 @@ public class App {
 		transfer.setAmount(amount);
 		transfer.setTransferStatusId(transferStatusId);
 		transfer.setTransferTypeId(transferTypeId);
-		transfer.setTransferId(transferIdNumber);
 
 		transferService.createTransfer(currentUser, transfer);
 
-		App.incrementTransferIdNumber();
 		return transfer;
 	}
 
-	public static void incrementTransferIdNumber() {
-		transferIdNumber++;
-	}
 
 	private boolean validateTransferChoice(int transferIdChoice, Transfer[] transfers) {
 		if(transferIdChoice != 0) {
@@ -314,15 +312,12 @@ public class App {
 		TransferType transferType = transferTypeService.getTransferTypeByTransferTypeId(currentUser, transfer.getTransferTypeId());
 		TransferStatus transferStatus = transferStatusService.getTransferStatusById(currentUser, transfer.getTransferStatusId());
 
-		Account accountFrom = new Account();
-		accountFrom = accountService.getAccountById(currentUser, transfer.getAccountFrom());
-		User userFrom = new User();
-		userFrom = userService.getUserByUserId(currentUser, accountFrom.getUserId());
 
-		Account accountTo = new Account();
-		accountTo = accountService.getAccountById(currentUser, transfer.getAccountTo());
-		User userTo = new User();
-		userTo = userService.getUserByUserId(currentUser, accountTo.getUserId());
+		Account accountFrom = accountService.getAccountById(currentUser, transfer.getAccountFrom());
+		User userFrom = userService.getUserByUserId(currentUser, accountFrom.getUserId());
+
+		Account accountTo = accountService.getAccountById(currentUser, transfer.getAccountTo());
+		User userTo = userService.getUserByUserId(currentUser, accountTo.getUserId());
 
 		System.out.println("--------------------------------------------");
 		System.out.println("Transfer Details");
