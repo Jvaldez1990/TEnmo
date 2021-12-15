@@ -73,7 +73,12 @@ public class RestTransferService implements TransferService {
         try {
             restTemplate.exchange(url, HttpMethod.POST, makeTransferEntity(authenticatedUser, transfer), Transfer.class);
         } catch (RestClientResponseException e) {
-            System.out.println();
+            if (e.getMessage().contains("500")) {
+                System.out.println("");
+                System.out.println("Not enough money");
+            }
+        } catch (ResourceAccessException e) {
+            System.out.println(e.getMessage());
         }
     }
 

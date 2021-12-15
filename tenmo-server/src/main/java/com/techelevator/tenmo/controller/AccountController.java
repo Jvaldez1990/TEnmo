@@ -19,7 +19,6 @@ public class AccountController {
 
     @RequestMapping(path = "/balance", method = RequestMethod.GET)
     public BigDecimal getBalance(Principal principal) {
-        System.out.println(principal.getName());
         return accountDao.getBalance(principal.getName());
     }
 

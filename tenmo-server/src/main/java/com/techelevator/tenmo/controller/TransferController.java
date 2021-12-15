@@ -51,9 +51,15 @@ public class TransferController {
         Account toAccount = accountDao.getAccountByAccountId(transfer.getAccountTo());
 
         TransferStatus status = transferStatusDao.getTransferStatusById(transfer.getTransferStatusId());
-        transferDao.createTransfer(transfer);
+
+        if (transferAmount.doubleValue() > fromAccount.getBalance().doubleValue()) {
+            throw new InsufficientFundsException();
+
+        } else {
 
 //        if (status.getTransferStatusDesc().equalsIgnoreCase("Send")) {
+
+            transferDao.createTransfer(transfer);
 
             fromAccount.sendMoney(transferAmount);
             toAccount.receiveMoney(transferAmount);
@@ -61,6 +67,7 @@ public class TransferController {
             accountDao.updateAccount(fromAccount);
             accountDao.updateAccount(toAccount);
 //        }
+        }
     }
 
     @RequestMapping(path = "/transfer", method = RequestMethod.PUT)

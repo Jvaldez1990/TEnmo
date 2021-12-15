@@ -37,7 +37,6 @@ public class App {
 	private TransferTypeService transferTypeService;
 	private TransferStatusService transferStatusService;
 
-//	private static int transferIdNumber;
 
 	public static void main(String[] args) {
 		App app = new App(new ConsoleService(System.in, System.out), new AuthenticationService(API_BASE_URL));
@@ -87,6 +86,7 @@ public class App {
 
 	private void viewCurrentBalance() {
 		BigDecimal balance = accountService.getBalance(currentUser);
+		System.out.println("");
 		System.out.println("Your current account balance is:  $" + balance);
 	}
 
