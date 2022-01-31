@@ -50,9 +50,9 @@ public class TransferController {
         Account fromAccount = accountDao.getAccountByAccountId(transfer.getAccountFrom());
         Account toAccount = accountDao.getAccountByAccountId(transfer.getAccountTo());
 
-        TransferStatus status = transferStatusDao.getTransferStatusById(transfer.getTransferStatusId());
+//        TransferStatus status = transferStatusDao.getTransferStatusById(transfer.getTransferStatusId());
 
-        if (transferAmount.doubleValue() > fromAccount.getBalance().doubleValue()) {
+        if ((transferAmount.doubleValue()) > (fromAccount.getBalance().doubleValue())) {
             throw new InsufficientFundsException();
 
         } else {
